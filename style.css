@@ -1,0 +1,204 @@
+/* O fundo é o céu: muda de cor conforme o tempo e se é dia ou noite. */
+@property --sky-top    { syntax: '<color>'; inherits: true; initial-value: #5fa8e8; }
+@property --sky-bottom { syntax: '<color>'; inherits: true; initial-value: #d6ecfb; }
+@property --ink        { syntax: '<color>'; inherits: true; initial-value: #0b2036; }
+
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom)) fixed;
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.4;
+  transition: --sky-top 1.2s ease, --sky-bottom 1.2s ease, --ink 1.2s ease;
+}
+
+body[data-sky="clear-day"]   { --sky-top: #5fa8e8; --sky-bottom: #d6ecfb; --ink: #0b2036; }
+body[data-sky="clear-night"] { --sky-top: #0c1630; --sky-bottom: #2c4a85; --ink: #f2f6ff; }
+body[data-sky="cloud-day"]   { --sky-top: #9fb0c2; --sky-bottom: #dde3ea; --ink: #14202e; }
+body[data-sky="cloud-night"] { --sky-top: #1a2233; --sky-bottom: #3c4a60; --ink: #eef2f8; }
+body[data-sky="rain-day"]    { --sky-top: #7f93a8; --sky-bottom: #b9c8d6; --ink: #0e1a27; }
+body[data-sky="rain-night"]  { --sky-top: #131b29; --sky-bottom: #2f4157; --ink: #e9eff6; }
+body[data-sky="snow-day"]    { --sky-top: #c5d3e2; --sky-bottom: #f2f6fa; --ink: #1b2a3a; }
+body[data-sky="snow-night"]  { --sky-top: #27324a; --sky-bottom: #5a6b8a; --ink: #f3f6fb; }
+body[data-sky="storm-day"]   { --sky-top: #5a5f78; --sky-bottom: #6f7490; --ink: #f4f5fa; }
+body[data-sky="storm-night"] { --sky-top: #0e0f1c; --sky-bottom: #2a2c48; --ink: #eef0fa; }
+body[data-sky="fog-day"]     { --sky-top: #b8bec4; --sky-bottom: #e3e6e8; --ink: #1c2329; }
+body[data-sky="fog-night"]   { --sky-top: #20262c; --sky-bottom: #4a535b; --ink: #eef1f3; }
+
+.wrap {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: max(1.25rem, env(safe-area-inset-top)) clamp(1.25rem, 3vw, 4rem) 3rem;
+}
+
+.sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* Busca */
+#search { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+#q {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font: inherit;
+  color: inherit;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: .75rem;
+  padding: .7rem .9rem;
+}
+#q::placeholder { color: color-mix(in srgb, var(--ink) 70%, transparent); }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: .75rem;
+  padding: .7rem 1rem;
+  border: 1px solid transparent;
+}
+.primary { background: var(--ink); color: var(--sky-bottom); }
+.quiet {
+  background: transparent;
+  color: inherit;
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.results {
+  list-style: none;
+  margin: .5rem 0 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: .75rem;
+  background: color-mix(in srgb, var(--sky-bottom) 92%, var(--ink));
+}
+.results button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  color: inherit;
+  border: 0;
+  border-radius: 0;
+  padding: .7rem .9rem;
+}
+.results li + li button { border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); }
+.results small { font-size: .875rem; margin-left: .35rem; }
+
+.status { margin: 1.5rem 0 0; }
+.status button { margin-left: .75rem; padding: .35rem .8rem; background: transparent; color: inherit; border-color: color-mix(in srgb, var(--ink) 40%, transparent); }
+
+/* Agora */
+.now { margin-top: 0; }
+.now h1 { margin: 0; font-size: clamp(1.35rem, 4.5vw, 1.75rem); font-weight: 600; letter-spacing: -.01em; }
+.cond { margin: .15rem 0 0; font-size: 1.1rem; }
+
+.reading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: .5rem; }
+.temp {
+  font-size: clamp(6.5rem, 28vw, 12rem);
+  font-weight: 300;
+  line-height: .95;
+  letter-spacing: -.05em;
+  font-variant-numeric: tabular-nums;
+}
+.temp::after { content: '°'; font-weight: 200; }
+.big-icon svg { display: block; width: clamp(5rem, 20vw, 9rem); height: auto; stroke-width: 1.1; }
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+}
+.facts dt { font-size: .9rem; }
+.facts dd { margin: 0; font-size: 1.35rem; font-weight: 500; }
+
+/* Blocos */
+.block { margin-top: 2.5rem; }
+.block h2 { margin: 0 0 .75rem; font-size: 1.05rem; font-weight: 600; }
+
+.hourly { list-style: none; margin: 0; padding: 0 0 .5rem; display: flex; gap: .25rem; overflow-x: auto; }
+.hourly li { flex: 1 0 4.25rem; display: flex; flex-direction: column; align-items: center; gap: .35rem; padding: .6rem 0; }
+.hourly svg { width: 1.75rem; height: 1.75rem; }
+.hourly .pop { font-size: .8rem; min-height: 1.1em; }
+
+.days { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+.days button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  padding: .75rem .25rem;
+  background: transparent;
+  color: inherit;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  border-radius: .75rem;
+}
+.days button[aria-pressed="true"] { background: color-mix(in srgb, var(--ink) 14%, transparent); border-color: var(--ink); }
+.days svg { width: 1.6rem; height: 1.6rem; }
+.d-name { font-weight: 600; font-size: .95rem; }
+.d-max { font-size: 1.15rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.d-min { font-size: .95rem; font-variant-numeric: tabular-nums; }
+.d-pop { font-size: .8rem; min-height: 1.1em; }
+
+footer { margin-top: 3rem; font-size: .875rem; }
+footer a { color: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  body { transition: none; }
+}
+
+/* Fundo animado (fx.js) */
+#fx {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity .6s ease;
+}
+.wrap { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  #fx { transition: none; }
+}
+
+/* Layout em duas colunas e gráfico */
+/* Layout: busca e previsão dos dias na coluna da direita, clima atual na esquerda */
+html { font-size: clamp(16px, 0.82vw + 4px, 26px); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 2.5rem; }
+.side-col > .block:first-child { margin-top: 0; }
+@media (min-width: 62rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-areas: "main search" "main side";
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(2rem, 4vw, 5rem);
+    row-gap: 0;
+    align-items: start;
+  }
+  .search-area { grid-area: search; }
+  .main-col { grid-area: main; }
+  .side-col { grid-area: side; margin-top: 2.5rem; }
+}
+
+.chart { overflow-x: auto; }
+.chart-svg { display: block; width: 100%; min-width: 26rem; height: auto; }
+.chart-grid { stroke: color-mix(in srgb, var(--ink) 20%, transparent); stroke-width: 1; }
+.chart-axis { fill: var(--ink); font-size: 12px; font-family: inherit; }
+.chart-val { fill: var(--ink); font-size: 13px; font-weight: 600; font-family: inherit; }
+.chart-line { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart-area { fill: color-mix(in srgb, var(--ink) 12%, transparent); stroke: none; }
+.chart-dot { fill: var(--sky-bottom); stroke: var(--ink); stroke-width: 2; }

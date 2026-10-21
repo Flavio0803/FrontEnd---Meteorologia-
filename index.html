@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tempo agora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <p id="status" class="status" role="status" aria-live="polite">Carregando…</p>
+
+    <main class="layout">
+      <header class="search-area">
+        <form id="search" role="search">
+          <label for="q" class="sr">Buscar cidade</label>
+          <input id="q" type="search" placeholder="Buscar cidade" autocomplete="off">
+          <button type="submit" class="primary">Buscar</button>
+        </form>
+        <ul id="results" class="results" hidden></ul>
+      </header>
+
+      <div class="main-col">
+        <section id="now" class="now" aria-labelledby="place" hidden>
+          <h1 id="place"></h1>
+          <p id="cond" class="cond"></p>
+          <div class="reading">
+            <div id="temp" class="temp"></div>
+            <div id="big-icon" class="big-icon"></div>
+          </div>
+          <dl class="facts">
+            <div><dt>Sensação</dt><dd id="feels"></dd></div>
+            <div><dt>Umidade</dt><dd id="humidity"></dd></div>
+            <div><dt>Vento</dt><dd id="wind"></dd></div>
+            <div><dt>Hoje</dt><dd id="today"></dd></div>
+          </dl>
+        </section>
+
+        <section id="hourly-block" class="block" aria-labelledby="hourly-title" hidden>
+          <h2 id="hourly-title">Próximas 24 horas</h2>
+          <ol id="hourly" class="hourly"></ol>
+        </section>
+      </div>
+
+      <div class="side-col">
+        <section id="daily-block" class="block" aria-labelledby="daily-title" hidden>
+          <h2 id="daily-title">Próximos 5 dias</h2>
+          <ol id="daily" class="days"></ol>
+        </section>
+
+        <section id="chart-block" class="block" aria-labelledby="chart-title" hidden>
+          <h2 id="chart-title">Temperatura nas próximas 24 horas</h2>
+          <div id="chart" class="chart"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      Dados de <a href="https://openweathermap.org/" target="_blank" rel="noopener">OpenWeather</a>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="fx.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
